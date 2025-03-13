@@ -1,61 +1,49 @@
 from user_auth import UserAuthentication
-from user_profile import UserProfile
 from community_post import CommunityPost
+from temp_data import TempDatabase
 
 def main():
     auth = UserAuthentication()
     community = CommunityPost()
-    
+    temp_db = TempDatabase()  # Use the temporary database
+
     while True:
         print("\nWelcome to the Community Platform")
         print("1. Create Profile & Register")
         print("2. Login")
-        print("3. Update Email")
-        print("4. Exit")
+        print("3. View All Users")
+        print("4. View All Therapists")
+        print("5. Exit")
         choice = input("Enter choice: ")
 
-        #REGISTER
-        if choice == "1":             
+        # REGISTER
+        if choice == "1":
             print("\nStep 1: Create Your Profile")
-            user_id = input("Enter User ID: ")  # This should be unique
+            user_id = input("Enter User ID: ")
+            username = input("Enter username: ")
+            email = input("Enter email: ")
+            password = input("Enter password: ")
+            role = input("Enter role (user/therapist): ").strip().lower()
 
-            name = input("Enter your name: ")
-            while True:
-                try:
-                    age = int(input("Enter your age: "))
-                    if age <= 0:
-                        print("Age must be a positive number. Try again.")
-                        continue
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
+            if role not in ["user", "therapist"]:
+                print("❌ Invalid role! Defaulting to 'user'.")
+                role = "user"
 
-            gender = input("Enter your gender: ")
-            email = input("Enter your email: ")
-
-            user_profile = UserProfile(user_id, name, age, gender, email)
-            if user_profile.save_to_db():  # Ensure profile creation was successful
-                print("\nProfile created successfully! Now proceed to registration.")
-
-                print("\nStep 2: Register Your Account")
-                username = input("Enter username: ")
-                password = input("Enter password: ")
-
-                if auth.register(username, password, email):
-                    print("\nRegistration successful! You can now log in.")
-                else:
-                    print("\nRegistration failed. Please try again.")
+            if auth.register(username, password, email, role):
+                print("✅ Registration successful!")
             else:
-                print("\nProfile creation failed. Registration aborted.")
+                print("❌ Registration failed.")
 
-
-        #LOGIN
+        # LOGIN
         elif choice == "2":
             username = input("Enter username: ")
             password = input("Enter password: ")
+            result = auth.login(username, password)
 
-            user_id = auth.login(username, password)
-            if user_id:
+            if result:
+                user_id, user_role = result
+                print(f"Logged in as {user_role}.")
+
                 while True:
                     print("\nCommunity Post Section")
                     print("1. Create Post")
@@ -72,33 +60,28 @@ def main():
 
                     elif post_choice == "3":
                         print("Logged out.")
-                        break
+                        break  # Exit to main menu
 
                     else:
                         print("Invalid choice! Try again.")
 
-
-        #UPDATE EMAIL
+        # VIEW USERS
         elif choice == "3":
-            user_id = input("Enter user ID to update email: ")
-            new_email = input("Enter new email: ")
+            print("\n=== Users ===")
+            for user in temp_db.get_all_users():
+                print(user.to_dict())
 
-            user = UserProfile(user_id)
-            current_email = user.get_email()
-
-            if current_email:
-                user.update_email(new_email)
-            else:
-                print("User not found.")
-
-
-        #EXIT PROGRAM
+        # VIEW THERAPISTS
         elif choice == "4":
+            print("\n=== Therapists ===")
+            for therapist in temp_db.get_all_therapists():
+                print(therapist.to_dict())
+
+        # EXIT
+        elif choice == "5":
             print("Exiting system.")
             break
-        
 
-        #ERROR CATCH
         else:
             print("Invalid choice! Try again.")
 

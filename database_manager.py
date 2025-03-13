@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3 
 
 class DatabaseManager:
     def __init__(self, db_name="user_profiles.db"):
@@ -15,45 +15,7 @@ class DatabaseManager:
                     name TEXT, 
                     age INTEGER, 
                     gender TEXT, 
-                    email TEXT
+                    email TEXT,
+                    user_role TEXT DEFAULT 'user'
                 )
             """)
-            self.conn.execute("""
-                CREATE TABLE IF NOT EXISTS Users (
-                    username TEXT PRIMARY KEY, 
-                    password TEXT, 
-                    email TEXT
-                )
-            """)
-            self.conn.execute("""
-                CREATE TABLE IF NOT EXISTS CommunityPost (
-                    postId TEXT PRIMARY KEY,
-                    userId TEXT,
-                    content TEXT,
-                    timestamp TEXT
-                )
-            """)
-
-    def execute_query(self, query, params=()):
-        """Execute a query with parameters and return cursor"""
-        with self.conn:
-            cursor = self.conn.cursor()
-            cursor.execute(query, params)
-            return cursor
-
-class UserDatabase:
-    def __init__(self):
-        self.db = DatabaseManager()
-
-    def add_user(self, username, password, email):
-        """Add a user to the database"""
-        existing_user = self.db.execute_query("SELECT * FROM Users WHERE username = ?", (username,)).fetchone()
-        if existing_user:
-            return False  # User already exists
-        
-        self.db.execute_query("INSERT INTO Users (username, password, email) VALUES (?, ?, ?)", (username, password, email))
-        return True
-
-    def get_user(self, username):
-        """Retrieve a user from the database"""
-        return self.db.execute_query("SELECT * FROM Users WHERE username = ?", (username,)).fetchone()

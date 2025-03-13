@@ -1,7 +1,7 @@
 from database_manager import DatabaseManager
 
 class UserProfile:
-    def __init__(self, user_id, name=None, age=None, gender=None, email=None):
+    def __init__(self, user_id, name=None, age=None, gender=None, email=None, user_role="user"):
         """Initialize user profile attributes"""
         self._db = DatabaseManager()
         self.user_id = user_id
@@ -9,6 +9,7 @@ class UserProfile:
         self.age = age
         self.gender = gender
         self.email = email
+        self.user_role = user_role  # New field
 
     def save_to_db(self):
         """Store user profile in the database, preventing duplicate user IDs"""
@@ -22,8 +23,8 @@ class UserProfile:
                 return False
 
             self._db.execute_query(
-                "INSERT INTO UserProfile (user_id, name, age, gender, email) VALUES (?, ?, ?, ?, ?)", 
-                (self.user_id, self.name, self.age, self.gender, self.email)
+                "INSERT INTO UserProfile (user_id, name, age, gender, email, user_role) VALUES (?, ?, ?, ?, ?, ?)", 
+                (self.user_id, self.name, self.age, self.gender, self.email, self.user_role)
             )
             print(f"✅ UserProfile for {self.name} created successfully.")
             return True
@@ -32,29 +33,16 @@ class UserProfile:
             print(f"❌ Database error while saving user: {e}")
             return False
 
-    def get_email(self):
-        """Retrieve email from database"""
+    def get_user_role(self):
+        """Retrieve user role from database"""
         try:
             result = self._db.execute_query(
-                "SELECT email FROM UserProfile WHERE user_id=?", 
+                "SELECT user_role FROM UserProfile WHERE user_id=?", 
                 (self.user_id,)
             ).fetchone()
 
             return result[0] if result else None
 
         except Exception as e:
-            print(f"❌ Database error while retrieving email: {e}")
+            print(f"❌ Database error while retrieving user role: {e}")
             return None
-
-    def update_email(self, new_email):
-        """Update email in database"""
-        try:
-            self._db.execute_query(
-                "UPDATE UserProfile SET email=? WHERE user_id=?", 
-                (new_email, self.user_id)
-            )
-            print(f"✅ Email updated successfully to {new_email}")
-            return True
-        except Exception as e:
-            print(f"❌ Database error while updating email: {e}")
-            return False

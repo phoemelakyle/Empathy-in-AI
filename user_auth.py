@@ -1,34 +1,27 @@
-from database_manager import UserDatabase
+from temp_data import TempDatabase, User
+import uuid
 
 class UserAuthentication:
     def __init__(self):
-        self.db = UserDatabase()  # Initialize database instance
+        self.db = TempDatabase()  # Use temporary database
 
     def register(self, username, password, email):
         """Register a new user"""
-        if self.db.add_user(username, password, email):
-            print("Registration successful!")
-        else:
-            print("Username already exists!")
-
-    @staticmethod
-    def login(username, password):
-        """Authenticate user"""
-        db = UserDatabase()
-        user = db.get_user(username)
-
-        if not user:
-            print("User not found.")
+        if self.db.get_user_by_email(email):
+            print("Email already registered!")
             return False
 
-        if user[1] == password:  # Ensure correct index for password
-            print("Login successful! Proceeding to community post section...")
-            return True
+        user = User(user_id=str(uuid.uuid4()), username=username, email=email, password=password)
+        self.db.users[user.user_id] = user
+        print("✅ Registration successful!")
+        return True
 
-        print("Invalid credentials. Please try again.")
-        return False
-
-    @staticmethod
-    def logout():
-        """Logout user"""
-        print("User logged out successfully!")
+    def login(self, username, password):
+        """Authenticate user"""
+        for user in self.db.users.values():
+            if user.username == username and user.password == password:
+                print(f"✅ Login successful! Welcome, {username}.")
+                return user.user_id, user.user_role
+        
+        print("❌ Invalid credentials. Please try again.")
+        return None
