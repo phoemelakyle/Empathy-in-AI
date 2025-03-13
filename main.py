@@ -14,7 +14,8 @@ def main():
         print("4. Exit")
         choice = input("Enter choice: ")
 
-        if choice == "1":
+        #REGISTER
+        if choice == "1":             
             print("\nStep 1: Create Your Profile")
             user_id = input("Enter User ID: ")  # This should be unique
 
@@ -47,6 +48,8 @@ def main():
             else:
                 print("\nProfile creation failed. Registration aborted.")
 
+
+        #LOGIN
         elif choice == "2":
             username = input("Enter username: ")
             password = input("Enter password: ")
@@ -74,6 +77,8 @@ def main():
                     else:
                         print("Invalid choice! Try again.")
 
+
+        #UPDATE EMAIL
         elif choice == "3":
             user_id = input("Enter user ID to update email: ")
             new_email = input("Enter new email: ")
@@ -86,10 +91,14 @@ def main():
             else:
                 print("User not found.")
 
+
+        #EXIT PROGRAM
         elif choice == "4":
             print("Exiting system.")
             break
+        
 
+        #ERROR CATCH
         else:
             print("Invalid choice! Try again.")
 
