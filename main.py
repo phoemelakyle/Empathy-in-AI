@@ -23,11 +23,11 @@ def main():
             username = input("Enter username: ")
             email = input("Enter email: ")
             password = input("Enter password: ")
-            role = input("Enter role (user/therapist): ").strip().lower()
+            role = input("Enter role (patient/therapist): ").strip().lower()
 
-            if role not in ["user", "therapist"]:
-                print("❌ Invalid role! Defaulting to 'user'.")
-                role = "user"
+            if role not in ["patient", "therapist"]:
+                print("❌ Invalid role! Defaulting to 'patient'.")
+                role = "patient"
 
             if auth.register(username, password, email, role):
                 print("✅ Registration successful!")
@@ -48,7 +48,8 @@ def main():
                     print("\nCommunity Post Section")
                     print("1. Create Post")
                     print("2. View Posts")
-                    print("3. Logout")
+                    print("3. Go to Chat")
+                    print("4. Logout")
                     post_choice = input("Enter choice: ")
 
                     if post_choice == "1":
@@ -57,8 +58,8 @@ def main():
 
                     elif post_choice == "2":
                         community.display_posts()
-
-                    elif post_choice == "3":
+                    
+                    elif post_choice == "4":
                         print("Logged out.")
                         break  # Exit to main menu
 

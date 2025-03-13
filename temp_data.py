@@ -2,7 +2,7 @@ import uuid
 
 class User:
     """Represents a regular user"""
-    def __init__(self, user_id, username, email, password, user_role="user"):
+    def __init__(self, user_id, username, email, password, user_role="patient"):
         self.user_id = user_id or str(uuid.uuid4())
         self.username = username
         self.email = email
