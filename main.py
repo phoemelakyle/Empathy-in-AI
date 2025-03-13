@@ -2,6 +2,7 @@ from user_auth import UserAuthentication
 from community_post import CommunityPost
 from temp_data import TempDatabase
 
+
 def main():
     auth = UserAuthentication()
     community = CommunityPost()
@@ -58,7 +59,20 @@ def main():
 
                     elif post_choice == "2":
                         community.display_posts()
-                    
+                        
+                    elif post_choice == "3":   
+                        if user_role:
+                            while True:
+                                print("\nMESSAGES")
+                                if user_role == "patient":
+                                    print("1. Chat with AI")
+                                    print("2. Chat with Therapist")  
+                                elif user_role == "therapist":
+                                    print("show user chats")
+                                break
+                        
+                        
+                            
                     elif post_choice == "4":
                         print("Logged out.")
                         break  # Exit to main menu
