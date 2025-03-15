@@ -5,13 +5,13 @@ class UserAuthentication:
     def __init__(self):
         self.db = TempDatabase()  # Use temporary database
 
-    def register(self, username, password, email):
+    def register(self, username, password, email, role):
         """Register a new user"""
         if self.db.get_user_by_email(email):
             print("Email already registered!")
             return False
 
-        user = User(user_id=str(uuid.uuid4()), username=username, email=email, password=password)
+        user = User(user_id=str(uuid.uuid4()), username=username, email=email, password=password, user_role=role)
         self.db.users[user.user_id] = user
         print("✅ Registration successful!")
         return True
