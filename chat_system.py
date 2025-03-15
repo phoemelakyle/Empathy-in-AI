@@ -1,8 +1,20 @@
 from datetime import datetime
+import google.generativeai as genai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class ChatSystem:
     def __init__(self, temp_db):
         self.temp_db = temp_db
+        self.google_ai_key = os.getenv("GOOGLE_AI_KEY")  # Get Google Gemini API key
+
+        if not self.google_ai_key:
+            print("⚠️ Warning: No Google AI key found. Make sure to set GOOGLE_AI_KEY in your .env file.")
+        else:
+            genai.configure(api_key=self.google_ai_key)
+            print("✅ Google Gemini AI key loaded successfully.")
 
     def start_chat(self, user_id, user_role):
         """Start the chat system based on user role"""
@@ -34,17 +46,36 @@ class ChatSystem:
                 print("Invalid choice. Please try again.")
 
     def _start_ai_chat(self):
-        """Start a chat session with AI"""
-        print("\n=== AI Chat Session ===")
+        """Start a chat session with Google Gemini AI"""
+        print("\n=== AI Chat Session (Powered by Google Gemini) ===")
         print("Type 'exit' to end chat")
-        
+
+        conversation_history = []
+
         while True:
             user_input = input("\nYou: ").strip()
             if user_input.lower() == 'exit':
                 break
             elif user_input:
-                print("\nAI: I understand you're sharing about your feelings. I'm here to listen and support you.")
-                print("    Would you like to tell me more about what's on your mind?")
+                conversation_history.append({"role": "user", "content": user_input})
+
+                response = self._get_ai_response(conversation_history)
+                print(f"\nAI: {response}")
+
+                conversation_history.append({"role": "assistant", "content": response})
+
+    def _get_ai_response(self, conversation_history):
+        """Send conversation history to Google Gemini AI and return response"""
+        if not self.google_ai_key:
+            return "⚠️ AI response is disabled. Please set your Google AI API key."
+
+        try:
+            model = genai.GenerativeModel("gemini-2.0-flash")  # ✅ Updated to the correct model name
+            response = model.generate_content([msg["content"] for msg in conversation_history])
+
+            return response.text  # Gemini AI returns text directly
+        except Exception as e:
+            return f"⚠️ Error communicating with Google AI: {str(e)}"
 
     def _show_available_therapists(self, user_id):
         """Display and select available therapists"""
