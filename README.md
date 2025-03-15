@@ -45,10 +45,13 @@ This system aligns with the **United Nations Sustainable Development Goals (SDGs
    git clone https://github.com/your-repo/empathy-in-ai.git
 
 2. Install packages:
+   ```sh
    pip install google-generativeai python-dotenv
 
-3. Setup .env file
+3. Setup .env file:
+   ```sh
    GOOGLE_AI_KEY= "***YOUR_API_KEY***"
 
-4. Run the program
+4. Run the program:
+   ```sh
    python main.py
