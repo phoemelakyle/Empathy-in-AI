@@ -30,7 +30,7 @@ This system aligns with the **United Nations Sustainable Development Goals (SDGs
 
 ## 🛠️ Technology Stack  
 
-- 🔹 **AI & Machine Learning** – OpenAI GPT, Google Dialogflow, TensorFlow  
+- 🔹 **AI & Machine Learning** – Gemini AI, Google Dialogflow, TensorFlow  
 - 🔹 **Backend** – Python (Flask/Django), Node.js  
 - 🔹 **Frontend** – React.js, Vue.js  
 - 🔹 **Database** – Firebase, PostgreSQL, MongoDB  
@@ -43,3 +43,15 @@ This system aligns with the **United Nations Sustainable Development Goals (SDGs
 1. Clone the repository:  
    ```sh
    git clone https://github.com/your-repo/empathy-in-ai.git
+
+2. Install packages:
+   ```sh
+   pip install google-generativeai python-dotenv
+
+3. Setup .env file:
+   ```sh
+   GOOGLE_AI_KEY= "***YOUR_API_KEY***"
+
+4. Run the program:
+   ```sh
+   python main.py
